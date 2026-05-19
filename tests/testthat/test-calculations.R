@@ -88,3 +88,18 @@ test_that("mtdna_per_cell calculation works with tumour correction", {
   )
 })
 
+
+test_that("mtdna from idxstats works", {
+  path <- system.file("idxstats", package = "mitochondriR")
+  expect_equal(
+    round(mtdna_from_idxstats(
+      path = path,
+      tumour_purity = 1,
+      tumour_ploidy = 2,
+      background_ploidy = 2,
+      per_cell = TRUE,
+      verbose = FALSE
+    ), digits=0),
+    47806
+  )
+})
