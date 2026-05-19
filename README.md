@@ -39,12 +39,12 @@ N_A &= \text{average autosomal copy number per cell}.
 \end{aligned}$$
 \## Calculating mt genomes per cell
 
-Importantly, $\text{mtDNA}_\text{CN}$\` does not necessarily reflect the
+Importantly, $\text{mtDNA}_\text{CN}$ does not necessarily reflect the
 number of mitochondria per cell as a single mitochondrion can contain
 zero, one, or multiple mitochondrial genomes.
 
 However we can convert our mt genomes per autosome estimate into mt
-genomes per cell by simply multiplying $\text{mtDNA}_\text{CN}$\` by
+genomes per cell by simply multiplying $\text{mtDNA}_\text{CN}$ by
 number of autosomes per cell ($N_A$) once more:
 
 $$\text{Mitochondrial Genomes Per Cell} = {N_A}^2 \times \frac{C_M}{C_A}$$
