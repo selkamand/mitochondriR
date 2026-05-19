@@ -31,10 +31,11 @@ The basic estimate is:
 $$\text{mtDNA}_\text{CN} = N_A \times \frac{C_M}{C_A}$$
 
 where:
+
 $$\begin{aligned}
 C_A &= \text{median autosomal depth of coverage}, \\
-C_M &= \text{median mitochondrial chromosome depth coverage}, \\
-N_A &= \text{number of autosomes per cell (e.g. 2 for diploid samples)}.
+C_M &= \text{median mitochondrial chromosome depth of coverage}, \\
+N_A &= \text{average autosomal copy number per cell}.
 \end{aligned}$$
 \## Calculating mt genomes per cell
 
