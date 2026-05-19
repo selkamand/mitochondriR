@@ -31,7 +31,6 @@ The basic estimate is:
 $$\text{mtDNA}_\text{CN} = N_A \times \frac{C_M}{C_A}$$
 
 where:
-
 $$\begin{aligned}
 C_A &= \text{median autosomal depth of coverage}, \\
 C_M &= \text{median mitochondrial chromosome depth coverage}, \\
@@ -64,6 +63,7 @@ then the typical autosomal copy number in the bulk sample is estimated
 as:
 
 $$N_A = 2(1 - \rho) + \rho P$$
+
 where:
 
 $$\begin{aligned}
@@ -82,6 +82,7 @@ N_A &= 2(1 - 0.8) + 0.8 \times 3 \\
 The purity- and ploidy-adjusted estimate is therefore:
 
 $$\text{mtDNA}_\text{CN} = \left[2(1 - \rho) + \rho P\right] \times \frac{C_M}{C_A}$$
+
 where:
 
 $$\begin{aligned}
