@@ -29,8 +29,6 @@ parse_idxstats <- function(path){
 #' Calculate mtdna burden from idxstats file
 #'
 #' @param path Path to idxstats file produced by `samtools idxstats <bam>`
-#' @param read_length Length of each read. Used to estimate depth but if not known, feel free to leave at default.
-#' It will change the absolute values of depths of coverage but not affect the calculation of mitochondrial burden.
 #' @param mtname name of mitochondrial genome in reference genome
 #' @param autosomes name of autosomal sequences in reference genome
 #' @param verbose verbose mode
@@ -42,7 +40,7 @@ parse_idxstats <- function(path){
 #' @examples
 #' path = system.file(package="mitochondrir", "idxstats")
 #' parse_idxstats(path)
-mtdna_from_idxstats <- function(path, background_ploidy = 2, tumour_ploidy = 2, tumour_purity = 1, read_length = 150, mtname =  "chrM", autosomes = paste0("chr", 1:22), per_cell = TRUE, verbose = TRUE){
+mtdna_from_idxstats <- function(path, background_ploidy = 2, tumour_ploidy = 2, tumour_purity = 1, mtname =  "chrM", autosomes = paste0("chr", 1:22), per_cell = TRUE, verbose = TRUE){
 
   # assertions
   assertions::assert_string(mtname)
@@ -55,8 +53,8 @@ mtdna_from_idxstats <- function(path, background_ploidy = 2, tumour_ploidy = 2, 
   assertions::assert_includes(df$reference, required = mtname)
   assertions::assert_includes(df$reference, required = autosomes)
 
-  # compute per chromosome coverage
-  df$depth <- df$n_mapped * read_length/df$length
+  # compute per chromosome depth (Reads per kilobase)
+  df$reads_per_kb <- df$n_mapped * 1000 / df$length
 
   # split idxstats df into autosomal vs mitochondrial df
   df_autosomes <- df[df$reference %in% autosomes, ,drop=FALSE]
@@ -67,27 +65,27 @@ mtdna_from_idxstats <- function(path, background_ploidy = 2, tumour_ploidy = 2, 
   autosome_total_reads <- sum(df_autosomes$n_mapped)
 
   # compute median coverage per autosomal chromosome
-  autosome_depth_median_of_averages <- stats::median(df_autosomes$depth)
+  autosome_median_reads_per_kb <- stats::median(df_autosomes$reads_per_kb)
 
   # compute average autosome depth of coverage
-  autosome_depth_average <- autosome_total_reads*read_length/autosome_total_length
+  # autosome_depth_average <- autosome_total_reads /autosome_total_length
 
   # compute average mitochondrial depth
-  mitochondrial_depth_average <- df_mt$depth
+  mitochondrial_reads_per_kb <- df_mt$reads_per_kb
 
   if(verbose){
-    message("total autosome reads: ", round(autosome_total_reads, digits = 1))
-    message("total autosome length: ", round(autosome_total_length, digits = 1))
-    message("average autosome depth: ", round(autosome_depth_average, digits = 1), "x")
+    # message("total autosome reads: ", round(autosome_total_reads, digits = 1))
+    # message("total autosome length: ", round(autosome_total_length, digits = 1))
+    # message("average autosome depth: ", round(autosome_depth_average, digits = 1), "x")
     # message("median autosome depth (median of average depth per autosome): ", round(autosome_depth_median, digits = 1), "x")
-    message("median autosome depth (median of average depth per autosome): ", round(autosome_depth_median_of_averages, digits = 1), "x")
-    message("average mtdna depth: ", round(mitochondrial_depth_average, digits = 1), "x")
+    message("autosome depth (median of reads per kb for each autosome): ", round(autosome_median_reads_per_kb, digits = 1), " reads per KB")
+    message("mtdna depth: ", round(mitochondrial_reads_per_kb, digits = 1), " reads per KB")
   }
 
   # calculate mtdna
   calculate_mtdna_tumour(
-    mitochondrial_depth = mitochondrial_depth_average,
-    autosome_depth = autosome_depth_median_of_averages,
+    mitochondrial_depth = mitochondrial_reads_per_kb,
+    autosome_depth = autosome_median_reads_per_kb,
     background_ploidy = background_ploidy,
     tumour_ploidy = tumour_ploidy,
     tumour_purity = tumour_purity
