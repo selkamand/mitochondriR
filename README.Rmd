@@ -17,6 +17,11 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/selkamand/mitochondriR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/selkamand/mitochondriR/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/selkamand/mitochondriR/graph/badge.svg)](https://app.codecov.io/gh/selkamand/mitochondriR)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-closed/selkamand/mitochondriR)
+[![code size](https://img.shields.io/github/languages/code-size/selkamand/mitochondriR.svg)](https://github.com/selkamand/mitochondriR)
+![GitHub last commit](https://img.shields.io/github/last-commit/selkamand/mitochondriR)
 <!-- badges: end -->
 
 > [!WARNING]  

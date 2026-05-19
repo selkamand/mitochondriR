@@ -5,6 +5,15 @@
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/selkamand/mitochondriR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/selkamand/mitochondriR/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/selkamand/mitochondriR/graph/badge.svg)](https://app.codecov.io/gh/selkamand/mitochondriR)
+![GitHub Issues or Pull
+Requests](https://img.shields.io/github/issues-closed/selkamand/mitochondriR)
+[![code
+size](https://img.shields.io/github/languages/code-size/selkamand/mitochondriR.svg)](https://github.com/selkamand/mitochondriR)
+![GitHub last
+commit](https://img.shields.io/github/last-commit/selkamand/mitochondriR)
 <!-- badges: end -->
 
 > \[!WARNING\]  
@@ -89,23 +98,15 @@ The quality of our estimate of ‘median coverage’ for autosomes and
 mitochondrial genomes will depend on what input file you start from.
 Samtools idxstats files are fast and convenient but only allow for
 average depth of coverage to be computed for any one chromosome. For
-autosomes we can take the median of the average depth of coverage per
-chromosome to mitigate impact of aneuploid autosomes but this metric
-will still be inflated by high depth alignments to short repetitive
-regions. Similarly, mitochondrial genome coverage can only be calculated
-as an average.
+autosomes we can take the median number of mapped reads per KB (to
+mitigate impact of aneuploid autosomes) but this metric will still be
+inflated by high depth alignments to short repetitive regions.
+Similarly, mitochondrial genome coverage can only be calculated as an
+average.
 
 This is why we highly recommend mosdepth per autosomal base (or region)
 based median depth of coverage estimates. Idxstats support is only
 really provided for convenience.
-
-If you do use idxstats, it may also be worth noting that while the
-`mtdna_from_idxstats` function takes a read_length argument that must be
-supplied to get realistic depth measures but since mitochondrial and
-autosomal chroms are both sequenced with the same read length this value
-doesn’t matter for mtDNA burden calculations, so feel free to leave at
-default if your unsure of read length (just be aware if verbose=TRUE the
-depth metrics described will not be correct).
 
 ## Installation
 
@@ -136,16 +137,12 @@ idxstats <- system.file("idxstats", package = "mitochondriR")
 # Compute rouch mtDNA copynumber from idxstats file, assuming 150bp read length
 mtdna_from_idxstats(
   idxstats,
-  read_length = 150,
   background_ploidy = 2,
   tumour_ploidy = 2, 
   tumour_purity = 1
 )
-#> total autosome reads: 11135790
-#> total autosome length: 2875001522
-#> average autosome depth: 0.6x
-#> median autosome depth (median of average depth per autosome): 0.6x
-#> average mtdna depth: 7143x
+#> autosome depth (median of reads per kb for each autosome): 4 reads per KB
+#> mtdna depth: 47619.8 reads per KB
 #> [1] 47805.93
 ```
 
