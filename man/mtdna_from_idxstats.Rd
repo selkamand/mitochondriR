@@ -9,7 +9,6 @@ mtdna_from_idxstats(
   background_ploidy = 2,
   tumour_ploidy = 2,
   tumour_purity = 1,
-  read_length = 150,
   mtname = "chrM",
   autosomes = paste0("chr", 1:22),
   per_cell = TRUE,
@@ -24,9 +23,6 @@ mtdna_from_idxstats(
 \item{tumour_ploidy}{median ploidy of tumour cells in bulk sample (default: 2 for diploid tumours)}
 
 \item{tumour_purity}{proportion of total cells in sample that are tumour cells (must be between 0 and 1). used to correct for tumour ploidy.}
-
-\item{read_length}{Length of each read. Used to estimate depth but if not known, feel free to leave at default.
-It will change the absolute values of depths of coverage but not affect the calculation of mitochondrial burden.}
 
 \item{mtname}{name of mitochondrial genome in reference genome}
 
