@@ -21,7 +21,7 @@ calculate_mtdna(
 \item{per_cell}{return mitochondrial genomes per cell. If FALSE, return mitochondrial genomes per autosome (single copy)}
 }
 \value{
-Number of mitochondrial genomes per cell. If \code{per_cell=false} returns number of mitochondrial genomes per single copy of the autosome.
+Number of mitochondrial genomes per cell. If \code{per_cell=FALSE} returns number of mitochondrial genomes per single copy of the autosome.
 }
 \description{
 calculate mitochondrial dna burden

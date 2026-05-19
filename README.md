@@ -1,0 +1,180 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# mitochondriR
+
+<!-- badges: start -->
+
+<!-- badges: end -->
+
+> \[!WARNING\]  
+> This package is in early development and not yet ready for use
+
+mitochondriR estimates mitochondrial genomes per autosome
+($\text{mtDNA}_\text{CN}$) from bulk whole-genome sequencing data using
+basic coverage information (mosdepth or idxstats file input) with
+optional correction for tumour aneuploidy using purity + ploidy.
+
+## Calculation
+
+The basic estimate is:
+
+$$\text{mtDNA}_\text{CN} = N_A \times \frac{C_M}{C_A}$$
+
+where:
+
+$$\begin{aligned}
+C_A &= \text{median autosomal depth of coverage}, \\
+C_M &= \text{median mitochondrial chromosome depth coverage}, \\
+N_A &= \text{number of autosomes per cell (e.g. 2 for diploid samples)}.
+\end{aligned}$$
+\## Calculating mt genomes per cell
+
+Importantly, $\text{mtDNA}_\text{CN}$\` does not necessarily reflect the
+number of mitochondria per cell as a single mitochondrion can contain
+zero, one, or multiple mitochondrial genomes.
+
+However we can convert our mt genomes per autosome estimate into mt
+genomes per cell by simply multiplying $\text{mtDNA}_\text{CN}$\` by
+number of autosomes per cell ($N_A$) once more:
+
+$$\text{Mitochondrial Genomes Per Cell} = {N_A}^2 \times \frac{C_M}{C_A}$$
+This per-cell estimate is what the functions in this package output by
+default. Note that when you expect a large amount of error in your
+estimate of $N_A$, you might consider setting (`per_cell=FALSE`) to
+switch back to Mitochondral genomes per autosome as the squared ${N_A}$
+coefficient of the per-cell metric can amplify these errors.
+
+## Tumour purity and ploidy correction
+
+In bulk tumour samples, the autosomal copy number may differ from the
+diploid ($N_A = 2$) profile we expect in healthy cells due to the
+mixture of tumour and normal cells and tendency of tumour cells to be
+aneuploid. If the tumour purity is $\rho$, and the tumour ploidy is $P$,
+then the typical autosomal copy number in the bulk sample is estimated
+as:
+
+$$N_A = 2(1 - \rho) + \rho P$$
+where:
+
+$$\begin{aligned}
+\rho &= \text{tumour purity}, \\
+P &= \text{tumour ploidy}.
+\end{aligned}$$
+
+For example, in a sample with 80% tumour purity and tumour ploidy 3:
+
+$$\begin{aligned}
+N_A &= 2(1 - 0.8) + 0.8 \times 3 \\
+    &= 0.4 + 2.4 \\
+    &= 2.8.
+\end{aligned}$$
+
+The purity- and ploidy-adjusted estimate is therefore:
+
+$$\text{mtDNA}_\text{CN} = \left[2(1 - \rho) + \rho P\right] \times \frac{C_M}{C_A}$$
+where:
+
+$$\begin{aligned}
+\rho &= \text{tumour purity}, \\
+P &= \text{tumour ploidy}. \\
+C_A &= \text{median autosomal depth of coverage}, \\
+C_M &= \text{median mitochondrial chromosome depth coverage}, \\
+N_A &= \text{average autosomal copy number per cell}.
+\end{aligned}$$
+
+## Other notes
+
+The quality of our estimate of ‘median coverage’ for autosomes and
+mitochondrial genomes will depend on what input file you start from.
+Samtools idxstats files are fast and convenient but only allow for
+average depth of coverage to be computed for any one chromosome. For
+autosomes we can take the median of the average depth of coverage per
+chromosome to mitigate impact of aneuploid autosomes but this metric
+will still be inflated by high depth alignments to short repetitive
+regions. Similarly, mitochondrial genome coverage can only be calculated
+as an average.
+
+This is why we highly recommend mosdepth per autosomal base (or region)
+based median depth of coverage estimates. Idxstats support is only
+really provided for convenience.
+
+If you do use idxstats, it may also be worth noting that while the
+`mtdna_from_idxstats` function takes a read_length argument that must be
+supplied to get realistic depth measures but since mitochondrial and
+autosomal chroms are both sequenced with the same read length this value
+doesn’t matter for mtDNA burden calculations, so feel free to leave at
+default if your unsure of read length (just be aware if verbose=TRUE the
+depth metrics described will not be correct).
+
+## Installation
+
+You can install the development version of mitochondriR like so:
+
+``` r
+if (!require("remotes"))
+    install.packages("remotes")
+
+remotes::install_github("selkamand/mitochondriR")
+```
+
+## Quick Start
+
+### From idxstats file (not recommended)
+
+See ‘Other notes’ section above for why we recommend mosdepth-based
+estimation.
+
+Ensure you’ve run `samtools idxstats` on your alignment to a reference
+genome.
+
+``` r
+library(mitochondriR)
+
+idxstats <- system.file("idxstats", package = "mitochondriR")
+
+# Compute rouch mtDNA copynumber from idxstats file, assuming 150bp read length
+mtdna_from_idxstats(
+  idxstats,
+  read_length = 150,
+  background_ploidy = 2,
+  tumour_ploidy = 2, 
+  tumour_purity = 1
+)
+#> total autosome reads: 11135790
+#> total autosome length: 2875001522
+#> average autosome depth: 0.6x
+#> median autosome depth (median of average depth per autosome): 0.6x
+#> average mtdna depth: 7143x
+#> [1] 47805.93
+```
+
+### Calculation Only
+
+If you estimate each of the required parameters using another method,
+you can perform the mtDNAcn calculation below:
+
+``` r
+library(mitochondriR)
+
+calculate_mtdna_tumour(
+  mitochondrial_depth = 100,
+  autosome_depth = 10,
+  background_ploidy = 2,
+  tumour_ploidy = 2, 
+  tumour_purity = 1
+)
+#> [1] 40
+```
+
+Or if your not sequencing a tumour sample and don’t have to worry about
+mixed ploidy, you can use the simpler interface:
+
+``` r
+calculate_mtdna(
+  mitochondrial_depth = 100,
+  autosome_depth = 10,
+  ploidy = 2
+)
+#> [1] 40
+```

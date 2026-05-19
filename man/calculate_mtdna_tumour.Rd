@@ -27,7 +27,7 @@ calculate_mtdna_tumour(
 \item{per_cell}{return mitochondrial genomes per cell. If FALSE, return mitochondrial genomes per autosome (single copy)}
 }
 \value{
-number of mitochondrial genomes per cell. if \code{per_cell=false} returns number of mitochondrial genomes per single copy of the autosome.
+number of mitochondrial genomes per cell. if \code{per_cell=FALSE} returns number of mitochondrial genomes per single copy of the autosome.
 }
 \description{
 from a bulk whole-genome tumour sample, calculate number of mitochondrial genomes per cell.

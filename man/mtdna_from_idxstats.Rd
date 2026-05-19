@@ -10,10 +10,10 @@ mtdna_from_idxstats(
   tumour_ploidy = 2,
   tumour_purity = 1,
   read_length = 150,
-  mtname = "chrm",
+  mtname = "chrM",
   autosomes = paste0("chr", 1:22),
   per_cell = TRUE,
-  verbose = true
+  verbose = TRUE
 )
 }
 \arguments{
@@ -37,7 +37,7 @@ It will change the absolute values of depths of coverage but not affect the calc
 \item{verbose}{verbose mode}
 }
 \value{
-number of mitochondrial genomes per cell. if \code{per_cell=false} returns number of mitochondrial genomes per single copy of the autosome.
+number of mitochondrial genomes per cell. if \code{per_cell=FALSE} returns number of mitochondrial genomes per single copy of the autosome.
 }
 \description{
 Calculate mtdna burden from idxstats file

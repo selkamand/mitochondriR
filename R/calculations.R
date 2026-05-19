@@ -19,9 +19,9 @@ parse_idxstats <- function(path){
   read.csv(
     file = path,
     sep = "\t",
-    header = false,
+    header = FALSE,
     col.names = cols,
-    colclasses =
+    colClasses =
       c("character","numeric", "numeric", "numeric")
   )
 }
@@ -36,13 +36,13 @@ parse_idxstats <- function(path){
 #' @param verbose verbose mode
 #' @inheritParams calculate_mtdna_tumour
 #'
-#' @returns number of mitochondrial genomes per cell. if \code{per_cell=false} returns number of mitochondrial genomes per single copy of the autosome.
+#' @returns number of mitochondrial genomes per cell. if \code{per_cell=FALSE} returns number of mitochondrial genomes per single copy of the autosome.
 #' @export
 #'
 #' @examples
 #' path = system.file(package="mitochondrir", "idxstats")
 #' parse_idxstats(path)
-mtdna_from_idxstats <- function(path, background_ploidy = 2, tumour_ploidy = 2, tumour_purity = 1, read_length = 150, mtname =  "chrm", autosomes = paste0("chr", 1:22), per_cell = TRUE, verbose = true){
+mtdna_from_idxstats <- function(path, background_ploidy = 2, tumour_ploidy = 2, tumour_purity = 1, read_length = 150, mtname =  "chrM", autosomes = paste0("chr", 1:22), per_cell = TRUE, verbose = TRUE){
 
   # assertions
   assertions::assert_string(mtname)
@@ -59,8 +59,8 @@ mtdna_from_idxstats <- function(path, background_ploidy = 2, tumour_ploidy = 2, 
   df$depth <- df$n_mapped * read_length/df$length
 
   # split idxstats df into autosomal vs mitochondrial df
-  df_autosomes <- df[df$reference %in% autosomes, ,drop=false]
-  df_mt <- df[df$reference %in% mtname, ,drop=false]
+  df_autosomes <- df[df$reference %in% autosomes, ,drop=FALSE]
+  df_mt <- df[df$reference %in% mtname, ,drop=FALSE]
 
   # compute total autosome median coverage
   autosome_total_length <- sum(df_autosomes$length)
@@ -107,7 +107,7 @@ mtdna_from_idxstats <- function(path, background_ploidy = 2, tumour_ploidy = 2, 
 #' @param tumour_ploidy median ploidy of tumour cells in bulk sample (default: 2 for diploid tumours)
 #' @param tumour_purity proportion of total cells in sample that are tumour cells (must be between 0 and 1). used to correct for tumour ploidy.
 #' @param per_cell return mitochondrial genomes per cell. If FALSE, return mitochondrial genomes per autosome (single copy)
-#' @returns number of mitochondrial genomes per cell. if \code{per_cell=false} returns number of mitochondrial genomes per single copy of the autosome.
+#' @returns number of mitochondrial genomes per cell. if \code{per_cell=FALSE} returns number of mitochondrial genomes per single copy of the autosome.
 #'
 #' @export
 #'
@@ -136,7 +136,7 @@ calculate_mtdna_tumour <- function(mitochondrial_depth, autosome_depth, backgrou
 #' @param ploidy autosomal ploidy. By default assumes cells are diploid (ploidy = 2)
 #' @param per_cell return mitochondrial genomes per cell. If FALSE, return mitochondrial genomes per autosome (single copy)
 #'
-#' @returns Number of mitochondrial genomes per cell. If \code{per_cell=false} returns number of mitochondrial genomes per single copy of the autosome.
+#' @returns Number of mitochondrial genomes per cell. If \code{per_cell=FALSE} returns number of mitochondrial genomes per single copy of the autosome.
 #' @export
 #'
 #' @examples
